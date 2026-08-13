@@ -1,0 +1,522 @@
+import type { ResultFilterParams } from '@/types/operateHistory'
+import dayjs from 'dayjs'
+
+const mockOperateHistoryList = [
+  {
+    id: 32800,
+    method: 1,
+    message: '新增系統使用者資料',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '192.168.1.115',
+    created_at: '2026-04-13T10:30:00.000Z',
+  },
+  {
+    id: 32799,
+    method: 2,
+    message: '更新權限設定檔',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-04-11T10:15:22.000Z',
+  },
+  {
+    id: 32798,
+    method: 3,
+    message: '刪除過期快取紀錄',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-06-23T09:50:11.000Z',
+  },
+  {
+    id: 32797,
+    method: 1,
+    message: '測試abccccc',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-13T09:12:45.000Z',
+  },
+  {
+    id: 32796,
+    method: 2,
+    message: '修改個人資料設定',
+    operator_id: 457597603,
+    operator: 'sarah_w',
+    ip: '114.33.120.45',
+    created_at: '2026-07-13T08:40:00.000Z',
+  },
+  {
+    id: 32795,
+    method: 1,
+    message: '匯入批次商品清單',
+    operator_id: 457597604,
+    operator: 'kevin_lin',
+    ip: '220.135.88.90',
+    created_at: '2026-08-13T08:05:30.000Z',
+  },
+  {
+    id: 32794,
+    method: 3,
+    message: 'erwerwerwerwerw',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-13T07:30:15.000Z',
+  },
+  {
+    id: 32793,
+    method: 2,
+    message: '變更帳戶狀態為停用',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-13T06:55:00.000Z',
+  },
+  {
+    id: 32792,
+    method: 1,
+    message: '建立新廣告活動',
+    operator_id: 457597605,
+    operator: 'mkt_user',
+    ip: '61.224.12.3',
+    created_at: '2026-08-13T06:10:20.000Z',
+  },
+  {
+    id: 32791,
+    method: 3,
+    message: '移除過期廣告圖檔',
+    operator_id: 457597605,
+    operator: 'mkt_user',
+    ip: '61.224.12.3',
+    created_at: '2026-08-13T05:45:10.000Z',
+  },
+  {
+    id: 32790,
+    method: 2,
+    message: '調整商品價格',
+    operator_id: 457597604,
+    operator: 'kevin_lin',
+    ip: '220.135.88.90',
+    created_at: '2026-08-13T05:00:00.000Z',
+  },
+  {
+    id: 32789,
+    method: 1,
+    message: '手動觸發系統備份',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-13T04:20:00.000Z',
+  },
+  {
+    id: 32788,
+    method: 2,
+    message: '重新設定密碼',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-13T03:15:33.000Z',
+  },
+  {
+    id: 32787,
+    method: 1,
+    message: '新增角色類別：高級管理員',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-13T02:40:12.000Z',
+  },
+  {
+    id: 32786,
+    method: 3,
+    message: '清理無效登入 Token',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-13T02:00:00.000Z',
+  },
+  {
+    id: 32785,
+    method: 2,
+    message: '更新伺服器防火牆規則',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-13T01:30:45.000Z',
+  },
+  {
+    id: 32784,
+    method: 1,
+    message: '上傳驗證文件',
+    operator_id: 457597603,
+    operator: 'sarah_w',
+    ip: '114.33.120.45',
+    created_at: '2026-08-13T01:00:10.000Z',
+  },
+  {
+    id: 32783,
+    method: 2,
+    message: '編輯訂單號碼 #98234',
+    operator_id: 457597604,
+    operator: 'kevin_lin',
+    ip: '220.135.88.90',
+    created_at: '2026-08-12T23:50:00.000Z',
+  },
+  {
+    id: 32782,
+    method: 3,
+    message: '取消異常訂單 #98231',
+    operator_id: 457597604,
+    operator: 'kevin_lin',
+    ip: '220.135.88.90',
+    created_at: '2026-08-12T23:10:05.000Z',
+  },
+  {
+    id: 32781,
+    method: 1,
+    message: '發送測試 API 請求',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-12T22:30:19.000Z',
+  },
+  {
+    id: 32780,
+    method: 2,
+    message: '修改系統預設時區',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-12T21:45:00.000Z',
+  },
+  {
+    id: 32779,
+    method: 1,
+    message: '建立使用者標籤：VIP',
+    operator_id: 457597605,
+    operator: 'mkt_user',
+    ip: '61.224.12.3',
+    created_at: '2026-08-12T21:00:15.000Z',
+  },
+  {
+    id: 32778,
+    method: 3,
+    message: '刪除重複發送的電子報',
+    operator_id: 457597605,
+    operator: 'mkt_user',
+    ip: '61.224.12.3',
+    created_at: '2026-08-12T20:15:40.000Z',
+  },
+  {
+    id: 32777,
+    method: 2,
+    message: '調整使用者權限組別',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-12T19:30:00.000Z',
+  },
+  {
+    id: 32776,
+    method: 1,
+    message: '測試 Webhook 連線',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-12T18:55:12.000Z',
+  },
+  {
+    id: 32775,
+    method: 2,
+    message: '更新金流 SDK 介面組態',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-12T18:10:00.000Z',
+  },
+  {
+    id: 32774,
+    method: 3,
+    message: '刪除測試用暫存檔案',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-12T17:40:22.000Z',
+  },
+  {
+    id: 32773,
+    method: 1,
+    message: '匯入新版中譯字典檔',
+    operator_id: 457597603,
+    operator: 'sarah_w',
+    ip: '114.33.120.45',
+    created_at: '2026-08-12T17:00:00.000Z',
+  },
+  {
+    id: 32772,
+    method: 2,
+    message: '修改庫存數量 +50',
+    operator_id: 457597604,
+    operator: 'kevin_lin',
+    ip: '220.135.88.90',
+    created_at: '2026-08-12T16:20:11.000Z',
+  },
+  {
+    id: 32771,
+    method: 1,
+    message: '新增運費規則',
+    operator_id: 457597604,
+    operator: 'kevin_lin',
+    ip: '220.135.88.90',
+    created_at: '2026-08-12T15:45:00.000Z',
+  },
+  {
+    id: 32770,
+    method: 3,
+    message: '移除測試優惠券代碼 TEST100',
+    operator_id: 457597605,
+    operator: 'mkt_user',
+    ip: '61.224.12.3',
+    created_at: '2026-08-12T15:00:30.000Z',
+  },
+  {
+    id: 32769,
+    method: 2,
+    message: '設定二階段驗證政策',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-12T14:15:00.000Z',
+  },
+  {
+    id: 32768,
+    method: 1,
+    message: '產生月度銷售營運報表',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-12T13:30:10.000Z',
+  },
+  {
+    id: 32767,
+    method: 2,
+    message: '更換 SMTP 郵件伺服器設定',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-12T12:50:00.000Z',
+  },
+  {
+    id: 32766,
+    method: 3,
+    message: '清理系統資料庫過期 Log',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-12T12:00:00.000Z',
+  },
+  {
+    id: 32765,
+    method: 1,
+    message: '測試發送簡訊驗證碼',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-12T11:22:45.000Z',
+  },
+  {
+    id: 32764,
+    method: 2,
+    message: '更新隱私權條款內容',
+    operator_id: 457597603,
+    operator: 'sarah_w',
+    ip: '114.33.120.45',
+    created_at: '2026-08-12T10:40:00.000Z',
+  },
+  {
+    id: 32763,
+    method: 1,
+    message: '新增黑名單 IP 規則',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-12T10:05:15.000Z',
+  },
+  {
+    id: 32762,
+    method: 3,
+    message: '刪除離職員工帳號',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-12T09:30:00.000Z',
+  },
+  {
+    id: 32751,
+    method: 1,
+    message: '測試abccccc',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-12T08:49:06.000Z',
+  },
+  {
+    id: 32750,
+    method: 3,
+    message: 'erwerwerwerwerw',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-12T07:18:02.000Z',
+  },
+  {
+    id: 32749,
+    method: 2,
+    message: '變更資料庫索引優化',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-12T06:30:00.000Z',
+  },
+  {
+    id: 32748,
+    method: 1,
+    message: '新增滿額贈折扣活動',
+    operator_id: 457597605,
+    operator: 'mkt_user',
+    ip: '61.224.12.3',
+    created_at: '2026-08-12T05:50:20.000Z',
+  },
+  {
+    id: 32747,
+    method: 2,
+    message: '批次變更訂單狀態為已出貨',
+    operator_id: 457597604,
+    operator: 'kevin_lin',
+    ip: '220.135.88.90',
+    created_at: '2026-08-12T05:10:00.000Z',
+  },
+  {
+    id: 32746,
+    method: 3,
+    message: '移除測試用分類標籤',
+    operator_id: 457597600,
+    operator: 'dtina0704',
+    ip: '2405:1c0:61db:130:c4cc:751:6a8c:fba8',
+    created_at: '2026-08-12T04:25:30.000Z',
+  },
+  {
+    id: 32745,
+    method: 1,
+    message: '綁定第三方登入服務 (Google)',
+    operator_id: 457597603,
+    operator: 'sarah_w',
+    ip: '114.33.120.45',
+    created_at: '2026-08-12T03:40:00.000Z',
+  },
+  {
+    id: 32744,
+    method: 2,
+    message: '調整系統日誌紀錄等級為 DEBUG',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-08-12T02:55:00.000Z',
+  },
+  {
+    id: 32743,
+    method: 1,
+    message: '初始化系統環境變數',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-12T02:10:12.000Z',
+  },
+  {
+    id: 32742,
+    method: 3,
+    message: '清除過期 Session',
+    operator_id: 457597602,
+    operator: 'system_bot',
+    ip: '10.0.0.1',
+    created_at: '2026-08-12T01:15:00.000Z',
+  },
+  {
+    id: 32741,
+    method: 1,
+    message: '系統專案初始化建置',
+    operator_id: 457597601,
+    operator: 'alex_chen',
+    ip: '192.168.1.105',
+    created_at: '2026-07-12T00:00:00.000Z',
+  },
+]
+
+/**
+ * 取得操作紀錄列表
+ *
+ * @async
+ * @function getOperationLogList
+ * @param {ResultFilterParams} params - 搜尋與分頁過濾條件
+ * @param {number} [params.method] - 操作類型 (1: 新增, 2: 修改, 3: 刪除)
+ * @param {string} [params.operator] - 操作者名稱關鍵字
+ * @param {string} [params.start_at] - 搜尋開始時間 (ISO 格式，如 'YYYY-MM-DDT00:00:00')
+ * @param {string} [params.end_at] - 搜尋結束時間 (ISO 格式，如 'YYYY-MM-DDT23:59:59')
+ * @param {number} [params.first_result=0] - 分頁偏移量（起始筆數）
+ * @param {number} [params.max_results=20] - 每頁最大筆數
+ * @returns {Promise<{
+ *   result: string,
+ *   ret: {
+ *     operation_log_list: Array<{
+ *       id: number,
+ *       method: number,
+ *       message: string,
+ *       operator_id: number,
+ *       operator: string,
+ *       ip: string,
+ *       created_at: string
+ *     }>,
+ *     pagination: {
+ *       first_result: number,
+ *       max_results: number,
+ *       total: number
+ *     }
+ *   }
+ * }>}
+ */
+export const getOperationLogList = async (params: ResultFilterParams) => {
+  const result = mockOperateHistoryList.filter((item) => {
+    const matchMethod = params.method ? item.method === params.method : true
+    const matchOperator = params.operator ? item.operator.includes(params.operator) : true
+    const itemDate = dayjs(item.created_at).startOf('day').valueOf()
+    const matchStart = params.start_at
+      ? itemDate >= dayjs(params.start_at).startOf('day').valueOf()
+      : true
+    const matchEnd = params.end_at
+      ? itemDate <= dayjs(params.end_at).startOf('day').valueOf()
+      : true
+
+    return matchMethod && matchOperator && matchStart && matchEnd
+  })
+
+  const firstResult = params.first_result ?? 0
+  const maxResults = params.max_results ?? 20
+
+  await new Promise((resolve) => setTimeout(resolve, 500))
+
+  return {
+    result: 'ok',
+    ret: {
+      operation_log_list: result.filter(
+        (_item, index) => index >= firstResult && index < firstResult + maxResults,
+      ),
+      pagination: {
+        first_result: firstResult,
+        max_results: maxResults,
+        total: result.length,
+      },
+    },
+  }
+}
