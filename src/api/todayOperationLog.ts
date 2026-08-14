@@ -15,9 +15,9 @@
 export const getTodayOperationLog = async () => {
   await new Promise((resolve) => setTimeout(resolve, 500))
   const data = {
-    today_total_operations: 1248,
-    unresolved_errors: 12,
-    current_active_admins: 5,
+    today_total_operations: 5,
+    unresolved_errors: 3,
+    current_active_admins: 1,
   }
 
   return { result: 'ok', ret: data }

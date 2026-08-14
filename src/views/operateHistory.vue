@@ -32,18 +32,7 @@
 
       <div class="search-category">
         <span class="item">操作時間</span>
-        <el-date-picker
-          v-model="curValue"
-          type="daterange"
-          :teleported="false"
-          range-separator="至"
-          start-placeholder="開始日期"
-          end-placeholder="結束日期"
-          value-format="YYYY-MM-DD"
-          format="YYYY-MM-DD"
-          popper-class="toggle-select-date-picker-time"
-          :editable="false"
-        />
+        <el-date-picker v-model="curValue" type="daterange" single-panel />
       </div>
 
       <div class="search-button-block">
@@ -343,6 +332,13 @@ onMounted(async () => {
     font-size: 16px;
     color: var(--text1-color);
     margin: 0 0 5px 3px;
+  }
+
+  :deep(.el-input),
+  :deep(.el-select),
+  :deep(.el-date-editor) {
+    width: 100%;
+    max-width: 100%;
   }
 }
 
